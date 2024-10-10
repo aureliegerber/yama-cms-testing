@@ -1,0 +1,20 @@
+---
+import { getEntries, getEntryByPermalink, getEntryByReference } from "@modules/collection";
+
+import BaseLayout from "@layouts/BaseLayout.astro";
+
+const entries = await getEntries();
+const homepage = getEntryByPermalink(entries, "/") ?? getEntryByReference(entries, "readme");
+
+if (!homepage) throw new Error("No homepage found, your project need a page with a permalink of '/'");
+
+const { Content } = await homepage.render();
+---
+
+<BaseLayout
+    title={homepage.data.title}
+    description={homepage.data.description}
+    displayFooter={false}
+>
+    <Content />
+</BaseLayout>

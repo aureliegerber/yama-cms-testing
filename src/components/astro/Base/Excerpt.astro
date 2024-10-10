@@ -1,0 +1,9 @@
+---
+import { nl2br } from "@modules/formatter";
+
+const { content } = Astro.props;
+---
+
+{content &&
+    <p set:html={nl2br(content)} class="block text-yama-primary/75 prose-content ml-0" />
+}

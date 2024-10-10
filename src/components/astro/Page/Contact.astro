@@ -1,0 +1,37 @@
+---
+import { SITE_DEFAULT_LOCALE } from "@consts";
+import { trans } from "@modules/i18n";
+
+const locale = SITE_DEFAULT_LOCALE;
+---
+
+<section class="grid grid-cols-1 w-full lg:grid-cols-4 lg:gap-x-12">
+    <div class="prose-content w-full lg:col-span-2">
+        <slot />
+    </div>
+    <div class="w-full mt-6 h-fit lg:col-span-2 lg:mt-0">
+        <form id="form-contact" action="" method="post" class="flex flex-col gap-y-4 items-center justify-center h-full md:text-lg">
+            <div class="flex flex-col gap-y-8 w-full">
+                <div>
+                    <label class="label" for="name">{trans('contact.name', locale) ?? "Nom"}</label>
+                    <input class="input" type="text" name="name" id="name" required />
+                </div>
+                <div>
+                    <label class="label" for="email">{trans('contact.email', locale) ?? "Email"}</label>
+                    <input class="input" type="email" name="_replyTo" id="email" required />
+                </div>
+                <div>
+                    <label class="label" for="subject">{trans('contact.subject', locale) ?? "Sujet"}</label>
+                    <input class="input" type="text" name="_subject" id="subject" required />
+                </div>
+                <div>
+                    <label class="label" for="message">{trans('contact.message', locale) ?? "Message"}</label>
+                    <textarea class="input" id="message" name="message" rows="3" required/>
+                </div>
+            </div>
+        </form>
+        <div class="mx-auto w-full mt-6 py-4 cursor-pointer bg-yama-accent/75 font-bold hover:bg-yama-accent/50 duration-300">
+            <input id="submit" class="cursor-pointer tracking-large w-full text-yama-nav-items-color" form="form-contact" type="submit" value={trans('contact.send', locale) ?? "Envoyer"} />
+        </div>
+    </div>
+</section>

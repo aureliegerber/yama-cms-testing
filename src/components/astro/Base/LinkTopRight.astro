@@ -1,0 +1,10 @@
+---
+import LinkIcon from "@components/astro/Svg/LinkIcon.astro"
+
+const { styles = "size-8", strokeColor } = Astro.props;
+---
+
+<div class:list={["relative overflow-hidden", styles]}>
+    <LinkIcon styles={`link-icon ${strokeColor}`} />
+    <LinkIcon styles={`link-icon absolute -bottom-full -left-full ${strokeColor}`} />
+</div>

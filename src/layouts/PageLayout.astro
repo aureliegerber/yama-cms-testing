@@ -1,0 +1,33 @@
+---
+import { getEntries, getEntriesByParent } from "@modules/collection";
+
+import MediaFullscreen from "@components/astro/Base/MediaFullscreen.astro";
+import TopPageLight from "@components/astro/Page/TopPageLight.astro";
+import Breadcrumb from "@components/astro/Base/Breadcrumb.astro";
+import Contact from "@components/astro/Page/Contact.astro";
+import Catalog from "@components/astro/Base/Catalog.astro";
+import MoreAside from "@components/astro/Page/MoreAside.astro";
+
+const { frontmatter } = Astro.props;
+const children = getEntriesByParent(await getEntries(), frontmatter.reference);
+---
+
+{frontmatter.media
+    ?   <MediaFullscreen frontmatter={frontmatter} />
+    :   <TopPageLight frontmatter={frontmatter} />
+}
+<div class="container">
+    <Breadcrumb currentPermalink={frontmatter.permalink} />
+    {frontmatter?.displayContact ? (
+            <Contact>
+                <slot />
+            </Contact>
+        ) : (
+            <section class="prose-content">
+                <slot />
+            </section>
+        )
+    }
+    <Catalog gallery={frontmatter.catalogs?.gallery} />
+    <MoreAside entries={children} />
+</div>

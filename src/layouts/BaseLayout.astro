@@ -1,0 +1,33 @@
+---
+import "@fontsource/krona-one";
+import "@fontsource/dm-sans";
+
+import { SITE_TITLE, SITE_DESCRIPTION, SITE_DEFAULT_LANGUAGE } from '@consts';
+import BaseHead from '@components/astro/Base/BaseHead.astro';
+import Header from '@components/astro/Base/Header/Header.astro';
+import MenuFullscreen from "@components/astro/Base/Header/MenuFullscreen.astro";
+import Footer from "@components/astro/Base/Footer/Footer.astro";
+
+const {title, description, displayFooter = true} = Astro.props;
+---
+
+<!doctype html>
+<html lang={SITE_DEFAULT_LANGUAGE}>
+    <head>
+        <BaseHead title={title ?? SITE_TITLE} description={description ?? SITE_DESCRIPTION} />
+    </head>
+    <body data-theme="dark" class="min-h-screen flex flex-col bg-yama-bg-color text-yama-primary">
+        <header>
+            <Header />
+            <MenuFullscreen />
+        </header>
+        <main class="z-10 grow h-full">
+            <slot />
+        </main>
+        {displayFooter &&
+            <footer>
+                <Footer />
+            </footer>
+        }
+    </body>
+</html>

@@ -1,0 +1,30 @@
+---
+import Categories from "@components/astro/Post/Categories.astro";
+import DefaultMedia from "@components/astro/Base/DefaultMedia.astro";
+import Excerpt from "@components/astro/Base/Excerpt.astro";
+
+const { frontmatter } = Astro.props;
+---
+
+<div class="relative mb-10">
+    {frontmatter.media
+        ?    <picture class="block w-full h-[80vh] lg:h-screen">
+                <source media="(max-width: 640px)" srcset={frontmatter.media.formats['tablet']?.url} />
+                <source media="(max-width: 896px)" srcset={frontmatter.media.formats['desktop']?.url} />
+                <source media="(max-width: 1152px)" srcset={frontmatter.media.formats['xl']?.url} />
+                <img
+                    class="w-full h-full object-cover brightness-50"
+                    src={frontmatter.media.formats['2xl']?.url}
+                    alt={frontmatter.media.alt ?? `Media ${frontmatter.title}`}
+                />
+            </picture>
+        :   <DefaultMedia isHomepage={false} />
+    }
+    <div class="absolute size-full flex items-center top-0 left-1/2 -translate-x-1/2 px-16 z-[5] md:px-20 lg:*:max-w-6xl lg:px-32">
+        <div class="group flex flex-col gap-y-2">
+            <Categories items={frontmatter?.category} />
+            <h1 class="mb-4">{frontmatter.title}</h1>
+            <Excerpt content={frontmatter.excerpt} />
+        </div>
+    </div>
+</div>

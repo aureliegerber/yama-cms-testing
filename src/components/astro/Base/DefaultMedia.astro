@@ -1,0 +1,8 @@
+---
+const { isHomepage = false } = Astro.props;
+---
+
+<div class="absolute inset-0 size-full z-[-1] overflow-hidden">
+    <div class="absolute size-full bg-yama-bg-color brightness-50" />
+    <div class:list={["absolute size-full background-grid-effect grid-mask z-10", { "group-hover:scale-110 duration-500" : !isHomepage }]} />
+</div>

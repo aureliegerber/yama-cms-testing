@@ -1,0 +1,17 @@
+---
+import { createPermalinkFromTaxon } from "@modules/router";
+import { SITE_DEFAULT_LOCALE } from "@consts";
+
+const locale = SITE_DEFAULT_LOCALE;
+const { category, label } = Astro.props;
+---
+
+<span class="h-fit overflow-hidden">
+    <a
+        data-elastic={label ?? category.translations[locale]?.name}
+        href={createPermalinkFromTaxon(category, locale)}
+        class="elastic-item-vertical w-fit px-0 uppercase font-bold text-xs tracking-widest"
+    >
+        {label ?? category.translations[locale]?.name}
+    </a>
+</span>

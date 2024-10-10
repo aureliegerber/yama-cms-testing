@@ -1,0 +1,30 @@
+---
+import LinkTopRight from "@components/astro/Base/LinkTopRight.astro";
+
+const sanitizePermalink = (url) => url.startsWith('//') ? `${Astro.url.origin}${url.slice(1)}` : url;
+
+const { previousLabel, previousUrl, nextLabel, nextUrl } = Astro.props;
+---
+
+<div class="relative h-fit py-0.5 mt-10">
+    <span class="absolute subtitle top-0 lg:top-2">{previousLabel}</span>
+    <span class="absolute subtitle top-0 right-0 lg:top-2">{nextLabel}</span>
+    <div class="grid grid-cols-2 mt-10 h-20 lg:mt-12 lg:h-28 *:flex *:items-center first:*:border-r-0 *:border *:border-yama-accent/50 *:p-5">
+        {previousUrl
+            ?   <a href={sanitizePermalink(previousUrl)} class="group" aria-label={previousLabel}>
+                    <LinkTopRight styles="size-7 ml-auto rotate-180" />
+                </a>
+            :   <div>
+                    <div class="w-7 h-[2px] ml-auto -rotate-45 bg-yama-primary" />
+                </div>
+        }
+        {nextUrl
+            ?   <a href={sanitizePermalink(nextUrl)} class="group" aria-label={nextLabel}>
+                    <LinkTopRight styles="size-7 mr-auto" />
+                </a>
+            :   <div>
+                    <div class="w-7 h-[2px] mr-auto -rotate-45 bg-yama-primary" />
+                </div>
+        }
+    </div>
+</div>

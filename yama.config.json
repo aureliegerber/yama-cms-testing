@@ -1,0 +1,400 @@
+{
+    "name": "Yuga",
+    "presets": {
+        "taxonomies": [
+            {
+                "code": "category",
+                "configuration": {
+                    "output": {
+                        "directory": "src/data/taxonomies",
+                        "filename": "{code}.json"
+                    }
+                },
+                "translations": {
+                    "fr_FR": {
+                        "name": "Catégorie"
+                    }
+                }
+            }
+        ],
+        "menus": [
+            {
+                "code": "header",
+                "configuration": {
+                    "output": {
+                        "directory": "src/data/menus",
+                        "filename": "{code}.json"
+                    }
+                },
+                "translations": {
+                    "fr_FR": {
+                        "name": "Navigation principale"
+                    }
+                }
+            },
+            {
+                "code": "footer",
+                "configuration": {
+                    "output": {
+                        "directory": "src/data/menus",
+                        "filename": "{code}.json"
+                    }
+                },
+                "translations": {
+                    "fr_FR": {
+                        "name": "Navigation pied de page"
+                    }
+                }
+            },
+            {
+                "code": "area",
+                "required_link": true,
+                "removed_external_link": true,
+                "configuration": {
+                    "output": {
+                        "directory": "src/data/menus",
+                        "filename": "{code}.json"
+                    },
+                    "thumbor": {
+                        "formats": [
+                            {
+                                "code": "mobile",
+                                "width": 384,
+                                "height": 0
+                            },
+                            {
+                                "code": "tablet",
+                                "width": 768,
+                                "height": 0
+                            },
+                            {
+                                "code": "desktop",
+                                "width": 1152,
+                                "height": 0
+                            },
+                            {
+                                "code": "xl",
+                                "width": 1536,
+                                "height": 0
+                            },
+                            {
+                                "code": "2xl",
+                                "width": 1920,
+                                "height": 0
+                            }
+                        ],
+                        "content_enabled": true,
+                        "content_format": {
+                            "width": 584,
+                            "height": 0
+                        }
+                    }
+                },
+                "translations": {
+                    "fr_FR": {
+                        "name": "Mise en page"
+                    }
+                }
+            }
+        ],
+        "contents": [
+            {
+                "code": "pages",
+                "catalogs": [
+                    "gallery"
+                ],
+                "configuration": {
+                    "output": {
+                        "directory": "src/content/{code}",
+                        "filename": "{slug}.{locale}.md"
+                    },
+                    "thumbor": {
+                        "formats": [
+                            {
+                                "code": "mobile",
+                                "width": 384,
+                                "height": 0
+                            },
+                            {
+                                "code": "tablet",
+                                "width": 768,
+                                "height": 0
+                            },
+                            {
+                                "code": "desktop",
+                                "width": 1152,
+                                "height": 0
+                            },
+                            {
+                                "code": "xl",
+                                "width": 1536,
+                                "height": 0
+                            },
+                            {
+                                "code": "2xl",
+                                "width": 1920,
+                                "height": 0
+                            }
+                        ],
+                        "content_enabled": true,
+                        "content_format": {
+                            "width": 584,
+                            "height": 0
+                        }
+                    }
+                },
+                "json_schema": {
+                    "properties": {
+                        "layout": {
+                            "title": "Template",
+                            "type": "string",
+                            "enum": [
+                                "@layouts/PageLayout.astro",
+                                "@layouts/LandingLayout.astro"
+                            ],
+                            "default": "@layouts/PageLayout.astro"
+                        }
+                    },
+                    "dependencies": {
+                        "layout": {
+                            "oneOf": [
+                                {
+                                    "properties": {
+                                        "layout": {
+                                            "enum": [
+                                                "@layouts/PageLayout.astro"
+                                            ]
+                                        },
+                                        "displayContact": {
+                                            "title": "Afficher le formulaire de contact ?",
+                                            "type": "boolean"
+                                        }
+                                    }
+                                },
+                                {
+                                    "properties": {
+                                        "layout": {
+                                            "enum": [
+                                                "@layouts/LandingLayout.astro"
+                                            ]
+                                        },
+                                        "displayAreaMenu": {
+                                            "title": "Activer l'exploitation du menu de mise en page ?",
+                                            "type": "boolean"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                },
+                "translations": {
+                    "fr_FR": {
+                        "label": "Page",
+                        "permalink": "/{slug}"
+                    }
+                }
+            },
+            {
+                "code": "posts",
+                "taxonomies": [
+                    "category"
+                ],
+                "catalogs": [
+                    "gallery"
+                ],
+                "configuration": {
+                    "output": {
+                        "directory": "src/content/{code}",
+                        "filename": "{slug}.{locale}.md"
+                    },
+                    "thumbor": {
+                        "formats": [
+                            {
+                                "code": "mobile",
+                                "width": 384,
+                                "height": 0
+                            },
+                            {
+                                "code": "tablet",
+                                "width": 768,
+                                "height": 0
+                            },
+                            {
+                                "code": "desktop",
+                                "width": 1152,
+                                "height": 0
+                            },
+                            {
+                                "code": "xl",
+                                "width": 1536,
+                                "height": 0
+                            },
+                            {
+                                "code": "2xl",
+                                "width": 1920,
+                                "height": 0
+                            }
+                        ],
+                        "content_enabled": true,
+                        "content_format": {
+                            "width": 584,
+                            "height": 0
+                        }
+                    }
+                },
+                "json_schema": {
+                    "properties": {
+                        "layout": {
+                            "type": "string",
+                            "title": "Layout",
+                            "default": "@layouts/PostLayout.astro"
+                        }
+                    }
+                },
+                "translations": {
+                    "fr_FR": {
+                        "label": "Post",
+                        "permalink": "/{category}/{date|Y-m-d}/{slug}"
+                    }
+                }
+            }
+        ],
+        "catalogs": [
+            {
+                "code": "gallery",
+                "configuration": {
+                    "thumbor": {
+                        "formats": [
+                            {
+                                "code": "mobile",
+                                "width": 384,
+                                "height": 0
+                            },
+                            {
+                                "code": "desktop",
+                                "width": 768,
+                                "height": 0
+                            }
+                        ]
+                    }
+                },
+                "translations": {
+                    "fr_FR": {
+                        "label": "Galerie",
+                        "json_schema": {
+                            "properties": {
+                                "title": {
+                                    "type": "string",
+                                    "title": "Titre"
+                                },
+                                "description": {
+                                    "type": "string",
+                                    "title": "Description"
+                                }
+                            }
+                        },
+                        "ui_schema": {
+                            "description": {
+                                "ui:widget": "textarea"
+                            }
+                        }
+                    }
+                }
+            }
+        ],
+        "datas": [
+            {
+                "code": "socials",
+                "configuration": {
+                    "output": {
+                        "directory": "src/data",
+                        "filename": "{code}.json"
+                    }
+                },
+                "translations": {
+                    "fr_FR": {
+                        "label": "Réseaux sociaux",
+                        "display_template": "{name}"
+                    }
+                },
+                "json_schema": {
+                    "properties": {
+                        "name": {
+                            "type": "string",
+                            "title": "Nom"
+                        },
+                        "url": {
+                            "type": "string",
+                            "title": "URL"
+                        },
+                        "icon": {
+                            "type": "string",
+                            "title": "Icone",
+                            "format": "data-url"
+                        }
+                    }
+                }
+            },
+            {
+                "code": "messages",
+                "configuration": {
+                    "output": {
+                        "directory": "src/data",
+                        "filename": "{code}.json"
+                    }
+                },
+                "translations": {
+                    "fr_FR": {
+                        "label": "Traductions",
+                        "display_template": "{key}",
+                        "json_schema": {
+                            "properties": {
+                                "value": {
+                                    "type": "string",
+                                    "title": "Message"
+                                }
+                            }
+                        },
+                        "ui_schema": {
+                            "value": {
+                                "ui:widget": "textarea"
+                            }
+                        }
+                    }
+                },
+                "json_schema": {
+                    "properties": {
+                        "key": {
+                            "type": "string",
+                            "title": "Key"
+                        }
+                    }
+                }
+            }
+        ]
+    },
+    "i18n": {
+        "fallback_locale": "fr_FR",
+        "locales": [
+            "fr_FR"
+        ]
+    },
+    "translations": {
+        "fr_FR": {
+            "title": "Yuga",
+            "description": "Yuga description"
+        }
+    },
+    "extra": {
+        "variables": {
+            "light": {},
+            "dark": {
+                "nav-items-color": "#ffffff",
+                "bg-color": "#2B2D42",
+                "primary": "#ffffff",
+                "accent": "#F37D01"
+            }
+        }
+    }
+}

@@ -1,0 +1,17 @@
+---
+import CallToAction from "@components/astro/Base/Footer/CallToAction.astro";
+import Socials from "@components/astro/Base/Footer/Socials.astro";
+import FooterNavigation from "@components/astro/Base/Footer/FooterNavigation.astro";
+import GridBackground from "@components/astro/Base/GridBackground.astro";
+
+const { styles = "" } = Astro.props;
+---
+
+<div class={`${styles} relative h-screen w-full flex flex-col justify-center items-end overflow-hidden`}>
+    <GridBackground />
+    <CallToAction />
+    <div class="absolute bottom-0 left-0 w-screen">
+        <Socials />
+        <FooterNavigation />
+    </div>
+</div>

@@ -1,0 +1,53 @@
+---
+import headerData from "@data/menus/header.json";
+import { trans } from "@modules/i18n";
+import { SITE_DEFAULT_LOCALE } from "@consts";
+
+import YamaLogo from "@components/astro/Svg/YamaLogo.astro";
+import CloseIcon from "@components/astro/Svg/CloseIcon.astro";
+import Socials from "@components/astro/Base/Footer/Socials.astro";
+import FooterNavigation from "@components/astro/Base/Footer/FooterNavigation.astro";
+import GridBackground from "@components/astro/Base/GridBackground.astro";
+
+const locale = SITE_DEFAULT_LOCALE;
+---
+
+<div id="fullscreen-menu" class="fixed flex flex-col justify-between h-screen w-screen opacity-0 top-0 left-0 text-yama-nav-items-color bg-yama-bg-color transition-opacity ease-elastic duration-300 z-0">
+    <div class="relative w-full flex justify-between items-center px-5 mt-6 z-10 lg:pl-10">
+        <a href="/" class=" mt-2 size-10 lg:size-11" aria-label="Logo Yama CMS">
+            <YamaLogo styles="size-full"/>
+        </a>
+        <CloseIcon id="close-menu" styles="fixed right-5 size-8 stroke-yama-primary cursor-pointer"/>
+    </div>
+    <!-- Center items if not taking enough height -->
+    <ul class:list={['flex flex-col flex-wrap h-[50vh] items-start content-start justify-center uppercase font-heading px-16 gap-x-6 z-10 md:gap-y-6 md:px-20 lg:px-32', { "md:justify-start": headerData.children && headerData.children.length > 6 }]}>
+        {headerData.children && headerData.children.length > 0
+                ? headerData.children.map(item => (
+                    <li class="h-fit overflow-hidden">
+                        <a href={item.translations[locale]?.url} data-elastic={item.translations[locale]?.name} class="elastic-item-vertical py-2 text-2xl md:text-3xl lg:text-4xl xl:text-5xl">{item.translations[locale]?.name}</a>
+                    </li>
+                ))
+            :   <li class="h-fit overflow-hidden">{trans('header.empty', locale) ?? "Veuillez ajouter des éléments au menu !"}</li>
+        }
+    </ul>
+    <div>
+        <Socials />
+        <FooterNavigation />
+    </div>
+    <GridBackground type="menu" />
+</div>
+
+<script>
+    const btnOpenMenu = document.querySelector("#open-menu");
+    const btnCloseMenu = document.querySelector("#close-menu");
+    const fullScreenMenu = document.querySelector("#fullscreen-menu");
+
+    const toggleMenu = () => {
+        fullScreenMenu.classList.contains('z-0')
+            ? fullScreenMenu.classList.replace('z-0', 'z-50')
+            : setTimeout(() => fullScreenMenu.classList.replace('z-50', 'z-0'), 300);
+        fullScreenMenu.classList.toggle('opacity-0');
+    }
+
+    [btnOpenMenu, btnCloseMenu].forEach(btn => btn.addEventListener('click', toggleMenu));
+</script>

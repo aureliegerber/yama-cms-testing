@@ -1,0 +1,32 @@
+---
+import { getBreadcrumb, getEntries, getEntryByPermalink } from "@modules/collection";
+
+import Separator from "@components/astro/Base/Separator.astro";
+
+const { currentPermalink } = Astro.props;
+const entries = await getEntries();
+const currentEntry = getEntryByPermalink(entries, currentPermalink);
+const breadcrumb = await getBreadcrumb([currentEntry]);
+---
+
+<nav aria-label="Breadcrumb" class="flex flex-wrap gap-y-1 gap-x-2 lg:gap-y-0">
+    {breadcrumb.map((entry, index) => (
+        <div class="items-center flex gap-x-2 w-full md:w-fit">
+            {index !== 0 &&
+                <span>&#62;</span>
+            }
+            <a href={entry.data.permalink} class="overflow-hidden menu-item h-fit">
+                <span
+                    data-elastic={entry.data.title}
+                    class:list={[
+                        "elastic-item-horizontal px-0 md:px-2",
+                        { "text-yama-accent": entry.data.permalink === currentPermalink }
+                    ]}
+                >
+                    {entry.data.title}
+                </span>
+            </a>
+        </div>
+    ))}
+</nav>
+<Separator />

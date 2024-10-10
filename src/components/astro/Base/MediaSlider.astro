@@ -1,0 +1,35 @@
+---
+import { SITE_DEFAULT_LOCALE } from "@consts";
+
+import Categories from "@components/astro/Post/Categories.astro";
+import LinkTopRight from "@components/astro/Base/LinkTopRight.astro";
+import DefaultMedia from "@components/astro/Base/DefaultMedia.astro";
+
+const { frontmatter, areaTaxon } = Astro.props;
+const locale = SITE_DEFAULT_LOCALE;
+---
+
+<article class="relative swiper-slide">
+    {areaTaxon?.media || frontmatter.media ? (
+            <picture class="block w-full h-screen">
+                <source media="(max-width: 640px)" srcset={areaTaxon?.media?.formats?.['tablet']?.url ?? frontmatter.media.formats['tablet']?.url} />
+                <source media="(max-width: 896px)" srcset={areaTaxon?.media?.formats?.['desktop']?.url ?? frontmatter.media.formats['desktop']?.url} />
+                <source media="(max-width: 1152px)" srcset={areaTaxon?.media?.formats?.['xl']?.url ?? frontmatter.media.formats['xl']?.url} />
+                <img
+                    class="w-full h-full object-cover brightness-50"
+                    src={areaTaxon?.media?.formats?.['2xl']?.url ?? frontmatter.media.formats['2xl']?.url}
+                    alt={areaTaxon?.media?.translations?.[locale]?.alt ?? frontmatter.media?.alt ?? `Media ${frontmatter.title}`}
+                />
+            </picture>
+        ) : (
+            <DefaultMedia isHomepage={true} />
+        )
+    }
+    <div class="absolute size-full flex items-center top-0 left-1/2 -translate-x-1/2 px-16 z-[5] md:px-20 lg:*:max-w-6xl lg:px-32">
+        <a href={frontmatter.permalink} class="group flex flex-col gap-y-2" aria-label={frontmatter.title}>
+            <Categories items={frontmatter?.category} />
+            <h2>{areaTaxon?.translations[locale]?.name ?? frontmatter.title}</h2>
+            <LinkTopRight styles="size-8 mt-2" />
+        </a>
+    </div>
+</article>

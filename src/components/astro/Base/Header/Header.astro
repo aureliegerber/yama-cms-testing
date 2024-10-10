@@ -1,0 +1,36 @@
+---
+import { SITE_DEFAULT_LOCALE } from "@consts";
+import headerData from "@data/menus/header.json";
+
+import YamaLogo from "@components/astro/Svg/YamaLogo.astro";
+
+const locale = SITE_DEFAULT_LOCALE;
+---
+
+<nav class="absolute z-20 flex justify-between w-full text-yama-nav-items-color pl-5 pr-20 mt-8 lg:pl-10">
+    <a href="/" class="absolute top-0 size-10 lg:size-11" aria-label="Logo Yama CMS">
+        <YamaLogo styles="size-full"/>
+    </a>
+    <div class="flex gap-x-4 mt-2 menu-item overflow-hidden items-center ml-auto">
+        {headerData.children && headerData.children.length > 0 &&
+            headerData.children.map((item, index) => {
+                {
+                    return index < 4 &&
+                        <span class="invisible overflow-hidden w-fit md:visible">
+                            <a
+                                class="elastic-item-horizontal whitespace-nowrap"
+                                data-elastic={item.translations[locale]?.name}
+                                href={item.translations[locale]?.url}
+                            >
+                                {item.translations[locale]?.name}
+                            </a>
+                        </span>
+                }
+            })
+        }
+        <div id="open-menu" class="fixed top-9 right-5 group cursor-pointer p-2 ml-2">
+            <span class="w-8 h-[2px] block bg-yama-nav-items-color"/>
+            <span class="w-5 h-[2px] block bg-yama-nav-items-color ml-auto mt-1.5 duration-200 group-hover:w-8"/>
+        </div>
+    </div>
+</nav>

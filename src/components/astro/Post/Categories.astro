@@ -1,0 +1,11 @@
+---
+const { items, styles = "" } = Astro.props;
+---
+
+{Array.isArray(items) &&
+    <div class={styles}>
+        {items.map(item => (
+            <span data-before="," class="text-yama-primary/80 uppercase font-bold text-xs tracking-widest before:content-[attr(data-before)] before:pr-2 first:before:hidden">{item}</span>
+        ))}
+    </div>
+}

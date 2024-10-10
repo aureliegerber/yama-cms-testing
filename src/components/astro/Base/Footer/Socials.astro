@@ -1,0 +1,22 @@
+---
+import socialsData from "@data/socials.json";
+---
+
+{socialsData.length > 0 &&
+    <div class="relative flex border-y border-yama-accent/25 z-10 bg-yama-bg-color/80">
+        {socialsData.map((social) => (
+            <div class="relative h-[4.5rem] w-full grow flex items-center justify-center gap-x-1 border-r border-yama-accent/25 last:border-r-0 md:h-[5.5rem] lg:h-28">
+                <a href={social.url} class="group relative flex justify-center items-center size-full">
+                    <span class="w-full h-fit overflow-hidden text-yama-nav-items-color text-xs lg:text-[0.90rem]">
+                        <span data-elastic={social.name} class="elastic-item-horizontal h-fit w-full font-heading hidden uppercase lg:block lg:text-center lg:z-10 lg:opacity-100">{social.name}</span>
+                    </span>
+                    <img
+                        class="absolute size-[1.5rem] cursor-pointer md:size-10 lg:opacity-0 lg:z-0"
+                        src={social.icon}
+                        alt={`Logo ${social.name}`}
+                    />
+                </a>
+            </div>
+        ))}
+    </div>
+}

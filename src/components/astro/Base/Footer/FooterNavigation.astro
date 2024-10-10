@@ -1,0 +1,28 @@
+---
+import { SITE_DEFAULT_LOCALE } from "@consts";
+import footerData from "@data/menus/footer.json";
+
+const locale = SITE_DEFAULT_LOCALE;
+---
+
+<nav class="flex flex-col gap-y-4 my-4 text-center items-center text-yama-nav-items-color font-bold text-sm md:flex-row md:justify-between md:px-6 md:py-3">
+    {footerData.children && footerData.children.length > 0 &&
+        <ul class="flex flex-wrap items-center justify-center w-fit gap-x-2 md:w-1/2 md:justify-end md:order-2">
+            {footerData.children.map(item => (
+                <li class="overflow-hidden">
+                    <a
+                        data-elastic={item.translations[locale]?.name}
+                        href={item.translations[locale]?.url}
+                        class="elastic-item-horizontal"
+                    >
+                        {item.translations[locale]?.name}
+                    </a>
+                </li>
+            ))}
+        </ul>
+    }
+    <div class="flex size-fit mx-auto overflow-hidden text-xs md:w-1/2 md:ml-0 md:order-1">
+        <span>Créé et propulsé par</span>
+        <a data-elastic="YAMA CMS" href="https://yama-cms.com/" class="elastic-item-horizontal w-fit pl-1">YAMA CMS</a>
+    </div>
+</nav>

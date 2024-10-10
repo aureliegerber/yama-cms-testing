@@ -1,0 +1,24 @@
+---
+import { trans } from "@modules/i18n";
+import { SITE_DEFAULT_LOCALE } from "@consts";
+
+import BaseLayout from "@layouts/BaseLayout.astro";
+import FooterNavigation from "@components/astro/Base/Footer/FooterNavigation.astro";
+import GridBackground from "@components/astro/Base/GridBackground.astro";
+import CallToAction from "@components/astro/Base/Footer/CallToAction.astro";
+
+const locale = SITE_DEFAULT_LOCALE;
+---
+
+<BaseLayout displayFooter={false}>
+    <div class="relative h-screen w-full flex flex-col justify-center items-end overflow-hidden">
+        <GridBackground />
+        <CallToAction
+            title={trans('error.cta.title', locale) ?? "Nous sommes désolés, la page n'existe pas."}
+            buttonText={trans('error.cta.button', locale) ?? "Retour accueil"}
+        />
+        <div class="absolute bottom-0 left-0 w-screen">
+            <FooterNavigation />
+        </div>
+    </div>
+</BaseLayout>

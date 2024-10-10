@@ -1,0 +1,20 @@
+---
+import { trans } from "@modules/i18n";
+import { SITE_DEFAULT_LOCALE } from "@consts";
+
+import ChildCard from "@components/astro/Page/ChildCard.astro";
+
+const locale = SITE_DEFAULT_LOCALE;
+const { entries } = Astro.props;
+---
+
+{entries.length > 0 &&
+    <aside class="mt-10">
+        <span class="subtitle">{trans('pages.more', locale) ?? "Voir aussi"}</span>
+        <div class="grid grid-cols-1 my-6 gap-3 md:grid-cols-2 lg:grid-cols-3">
+            {entries.map(entry => (
+                <ChildCard entry={entry} />
+            ))}
+        </div>
+    </aside>
+}

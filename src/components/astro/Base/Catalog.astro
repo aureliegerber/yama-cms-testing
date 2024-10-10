@@ -1,0 +1,33 @@
+---
+import Separator from "@components/astro/Base/Separator.astro";
+
+const { gallery } = Astro.props;
+---
+
+{gallery &&
+    <Separator />
+    <section>
+        {gallery?.title &&
+            <h2 class="subtitle font-sans mb-6">{gallery.title}</h2>
+        }
+        {gallery?.description &&
+            <span class="block prose-content text-yama-primary/75">{gallery.description}</span>
+        }
+        {gallery?.items.length > 0 &&
+            <div class="grid my-6 grid-cols-1 gap-2 lg:grid-cols-2">
+                {gallery.items.map(item => (
+                    <div>
+                        <picture class="block size-full">
+                            <source media="(max-width: 640px)" srcset={item.formats?.mobile?.url} />
+                            <img
+                                class="w-full h-full object-cover rounded-md"
+                                src={item.formats?.desktop?.url}
+                                alt={item.alt ?? `Media ${gallery?.title}`}
+                            />
+                        </picture>
+                    </div>
+                ))}
+            </div>
+        }
+    </section>
+}

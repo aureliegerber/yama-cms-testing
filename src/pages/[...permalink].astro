@@ -1,0 +1,25 @@
+---
+import { getEntries } from '@modules/collection';
+
+import BaseLayout from "@layouts/BaseLayout.astro";
+
+export async function getStaticPaths() {
+	return (await getEntries()).filter((entry) => entry && entry.data.permalink !== "/").map((entry) => ({
+        params: {
+            permalink: entry.data.permalink
+        },
+        props: entry,
+    }));
+}
+
+const entry = Astro.props;
+const { Content } = await entry.render();
+---
+
+<BaseLayout 
+    title={entry.data.title} 
+    description={entry.data.description} 
+    displayFooter={entry.data.layout !== "@layouts/LandingLayout.astro"}
+>
+    <Content />
+</BaseLayout>

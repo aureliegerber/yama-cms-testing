@@ -1,0 +1,49 @@
+---
+import { Picture } from "astro:assets";
+
+import gridMenu from "@assets/images/grid-menu.jpg";
+import grid from "@assets/images/grid.jpg";
+
+const { type = "contact" } = Astro.props;
+
+const images = {
+    menu: {
+        src: gridMenu,
+        credits: {
+            author: "Starline",
+            url: "https://www.freepik.com/free-vector/abstract-perspective-grid-lines-black-background_77928372.htm#query=black%20grid%20background&position=5&from_view=keyword&track=ais&uuid=e69388b2-7b24-4da0-9810-3646a5dfc81d",
+            host: "Freepik"
+        },
+    },
+    contact: {
+        src: grid,
+        credits: {
+            author: "Starline",
+            url: "https://www.freepik.com/free-vector/3d-geometric-cubic-grid-layout-vector-design_77646079.htm#query=grid&position=45&from_view=author&uuid=6f1863ce-9941-4822-9108-16a05fc8ed57#position=45&query=grid",
+            host: "Freepik"
+        },
+    }
+};
+---
+
+<!-- Gradient effect -->
+<div class="absolute top-0 left-0 h-96 w-full bg-gradient-to-b from-yama-bg-color via-yama-bg-color/50 to-transparent z-0" />
+<div class="absolute w-screen h-screen z-[-1]">
+    <figure class="size-full">
+        <Picture
+            class:list={['opacity-25 size-full object-cover', { "object-left lg:object-center": type === "menu" }]}
+            src={images[type].src}
+            widths={[720, 1152, images[type].src.width]}
+            sizes={`(max-width: 848px) 720px, (max-width: 1408px) 1280px, ${images[type].src.width}px`}
+            formats={['webp']}
+            alt="Grid background"
+        />
+        <figcaption class="hidden">
+            Crédits: {images[type].credits.author} /
+            <a href={images[type].credits.url}>
+                Image by {images[type].credits.author}
+            </a>
+            on {images[type].credits.host}
+        </figcaption>
+    </figure>
+</div>

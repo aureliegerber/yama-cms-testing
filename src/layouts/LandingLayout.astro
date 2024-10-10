@@ -1,0 +1,181 @@
+---
+import 'swiper/css';
+import { getCollection } from 'astro:content';
+import { getEntries, sortDate, getEntryByPermalink } from '@modules/collection';
+import { getArea } from '@modules/data';
+
+import ArrowTopIcon from "@components/astro/Svg/ArrowTopIcon.astro";
+import ArrowDownIcon from "@components/astro/Svg/ArrowDownIcon.astro";
+import MediaSlider from "@components/astro/Base/MediaSlider.astro";
+import Footer from "@components/astro/Base/Footer/Footer.astro";
+import { SITE_DEFAULT_LOCALE } from '@consts';
+
+const { frontmatter } = Astro.props;
+const locale = SITE_DEFAULT_LOCALE;
+
+const posts = await getCollection("posts") ?? [];
+const sortedPosts = posts.sort(sortDate).slice(0, 4);
+
+const area = getArea();
+const currentArea = area.hasOwnProperty('children') ? area.children.find(taxon => taxon.translations[locale]?.url === frontmatter.permalink) : null;
+const entries = await getEntries();
+const areaEntries = currentArea ? currentArea.children.map(taxon => getEntryByPermalink(entries, taxon.translations[locale]?.url)) : [];
+
+const slideItems = frontmatter?.displayAreaMenu ? areaEntries : sortedPosts;
+const slideNumbers = [...slideItems, 'contact'].map((entry, i) => i);
+---
+
+<div id="swiper" data-entries-length={slideItems.length} class="swiper relative h-screen">
+
+    <div class="swiper-wrapper w-screen h-screen">
+        {frontmatter.reference === "readme" &&
+            <div class="swiper-slide">
+                <div class="size-full flex flex-col items-center justify-center gap-y-8 mt-8 px-12 max-w-4xl mx-auto md:mt-0">
+                    <h2>{frontmatter.title}</h2>
+                    <div class="prose-content text-sm lg:text-base">
+                        <slot />
+                    </div>
+                </div>
+            </div>
+        }
+        {slideItems.map((entry, index) => (
+                <MediaSlider frontmatter={entry.data} areaTaxon={currentArea?.children[index]} />
+            )
+        )}
+        <Footer styles="swiper-slide" />
+    </div>
+
+    <!-- Navigation -->
+    {slideItems.length > 0 &&
+        <div id="swiper-button-container" class="absolute flex flex-col gap-y-4 top-1/2 -translate-y-1/2 right-3 z-10 duration-500 overflow-hidden slider-arrow-container-reduce slider-arrow-container-max-height origin-center md:right-8 lg:right-12">
+            <div id="swiper-button-wrapper" class="flex flex-col gap-y-4 slider-arrow-position-top duration-300 *:size-14 *:cursor-pointer *:duration-300">
+                <div id="swiper-button-prev" class="pt-2 hover:-translate-y-2">
+                    <ArrowTopIcon styles="size-full stroke-[4px] stroke-yama-primary"/>
+                </div>
+                <div id="swiper-button-next" class="pb-2 hover:translate-y-2">
+                    <ArrowDownIcon styles="size-full stroke-[4px] stroke-yama-primary"/>
+                </div>
+            </div>
+        </div>
+    }
+
+    <!-- Index indicator -->
+    {slideItems.length > 0 &&
+        <div class="absolute top-1/2 -translate-y-1/2 left-4 z-10 slider-index-width overflow-hidden text-yama-primary md:left-8 lg:left-12">
+            <div id="index-current" class="text-center font-bold text-xs tracking-large">
+                <div
+                    id="index-current-wrapper"
+                    style={{transform: "translateX(0%)", width: `${slideNumbers.length * 20}px`}}
+                    class="flex duration-500 delay-100"
+                >
+                    {slideNumbers.map(i => (
+                        <span class="slider-index-width">
+                            {i < 9 && 0}{i + 1}
+                        </span>
+                    ))}
+                </div>
+            </div>
+            <div id="index-scroll-indicator" data-height="192px" class="h-full min-h-48 w-[1px] bg-yama-primary mx-auto my-4 duration-500 delay-150"/>
+            <div id="index-next" class="text-center font-bold text-xs tracking-large">
+                <div
+                    id="index-next-wrapper"
+                    data-initial-translate={(slideNumbers.length - 2) * 20}
+                    style={{transform: `translateX(-${(slideNumbers.length - 2) * 20}px)`, width: `${slideNumbers.length * 20}px`}}
+                    class="flex duration-500 delay-100"
+                >
+                    {slideNumbers.reverse().map(i => (
+                        <span class="slider-index-width">
+                            {i < 9 && 0}{i + 1}
+                        </span>
+                    ))}
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<script>
+    import Swiper from 'swiper';
+    import { Mousewheel, Navigation } from 'swiper/modules';
+
+    const swiperBtnPrev = document.getElementById('swiper-button-prev');
+    const swiperBtnNext = document.getElementById('swiper-button-next');
+    const swiperBtnWrapper = document.getElementById('swiper-button-wrapper');
+    const swiperBtnContainer = document.getElementById('swiper-button-container');
+
+    const indexCurrentWrapper = document.getElementById('index-current-wrapper');
+    const indexNextWrapper = document.getElementById('index-next-wrapper');
+    const indexScrollIndicator = document.getElementById('index-scroll-indicator');
+    const entriesLength = document.getElementById('swiper').getAttribute('data-entries-length');
+
+    const swiper = new Swiper('.swiper', {
+        modules: [Navigation, Mousewheel],
+        direction: 'vertical',
+        navigation: {
+            prevEl: swiperBtnPrev,
+            nextEl: swiperBtnNext,
+        },
+        mousewheel: true,
+        speed: 1000
+    });
+
+    swiper.on('slideChange', () => {
+        if (parseInt(entriesLength) !== 0) {
+            arrowsAnimation();
+            indexesAnimation();
+        }
+    })
+
+
+
+    const indexesAnimation = () => {
+        const indexWidth = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--slider-index-width'));
+
+        const translateCurrent = swiper.activeIndex * indexWidth;
+        const nextInitalTranslate = parseInt(indexNextWrapper.getAttribute('data-initial-translate'));
+        const translateNext = nextInitalTranslate - (swiper.activeIndex * indexWidth);
+
+        indexCurrentWrapper.style.transform = `translateX(-${translateCurrent}px)`;
+        indexNextWrapper.style.transform = `translateX(${-translateNext}px)`;
+
+        if (swiper.isEnd) {
+            [indexCurrentWrapper, indexNextWrapper].forEach(index => index.classList.add('opacity-0'));
+            indexScrollIndicator.classList.replace('min-h-48', 'min-h-0');
+        } else {
+            [indexCurrentWrapper, indexNextWrapper].forEach(index => index.classList.remove('opacity-0'));
+            indexScrollIndicator.classList.replace('min-h-0', 'min-h-48');
+        }
+    }
+
+
+
+    // If the slider contains only two elements, the positions' values are modified.
+    const resetArrowPosition = (element: HTMLElement, oldShortClass: string, oldClass: string, newClass: string) => {
+        return element.classList.replace(swiper.slides.length <= 2 ? oldShortClass : oldClass, newClass);
+    }
+
+    const positionTop = 'slider-arrow-position-top';
+    const positionBottom = 'slider-arrow-position-bottom';
+    const containerReduce = 'slider-arrow-container-reduce';
+    const containerFull = 'slider-arrow-container-full';
+
+    const animate = () => {
+        swiperBtnContainer.classList.replace(containerReduce, containerFull);
+        swiperBtnWrapper.classList.contains(positionTop)
+            ? swiperBtnWrapper.classList.replace(positionTop, positionBottom)
+            : swiperBtnWrapper.classList.replace(positionBottom, positionBottom);
+    }
+
+    const arrowsAnimation = () => {
+        if (swiper.isBeginning) {
+            resetArrowPosition(swiperBtnWrapper, positionBottom, positionBottom, positionTop);
+        } else if (swiper.isEnd) {
+            resetArrowPosition(swiperBtnWrapper, positionTop, positionBottom, positionBottom);
+        } else {
+            animate();
+            return;
+        }
+
+        swiperBtnContainer.classList.replace(containerFull, containerReduce);
+    }
+</script>

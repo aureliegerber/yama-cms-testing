@@ -1,0 +1,93 @@
+---
+
+import { getCollection } from "astro:content";
+import { getCategory, getTaxonsByReference } from "@modules/data";
+import { formatDate } from "@modules/formatter";
+import { getEntryByReference, sortDate } from "@modules/collection";
+import { createPermalinkFromTaxon } from "@modules/router";
+import { trans } from "@modules/i18n";
+import { SITE_DEFAULT_LOCALE } from "@consts";
+
+import MediaFullscreen from "@components/astro/Base/MediaFullscreen.astro";
+import Separator from "@components/astro/Base/Separator.astro";
+import Catalog from "@components/astro/Base/Catalog.astro";
+import Navigation from "@components/astro/Base/Navigation.astro";
+import ListIcon from "@components/astro/Svg/ListIcon.astro";
+import Article from "@components/astro/Post/Article.astro";
+import CategoryLink from "@components/astro/Post/CategoryLink.astro";
+import TopPostLight from "@components/astro/Post/TopPostLight.astro";
+
+const { frontmatter } = Astro.props;
+const locale = SITE_DEFAULT_LOCALE;
+const category = getCategory();
+const categories = getTaxonsByReference(category, frontmatter.reference, "posts");
+
+const posts = await getCollection("posts") ?? [];
+const sortedPosts = posts.sort(sortDate);
+const similarPosts = categories
+    .map((taxon) => taxon.collection.hasOwnProperty("posts") ? taxon.collection.posts : [])
+    .flat()
+    .map(reference => getEntryByReference(posts, reference))
+    .filter(post => post.data.reference !== frontmatter.reference)
+    .filter((post, i, array) => array.indexOf(post) === i)
+    .sort(sortDate)
+;
+
+const currentPosition = sortedPosts.findIndex((post) => post.data.reference === frontmatter.reference);
+const previousPost = getEntryByReference(posts, sortedPosts[currentPosition - 1]?.data.reference);
+const nextPost = getEntryByReference(posts, sortedPosts[currentPosition + 1]?.data.reference);
+---
+
+{frontmatter.media
+    ?   <MediaFullscreen frontmatter={frontmatter} />
+    :   <TopPostLight frontmatter={frontmatter} />
+}
+<div class="container">
+    <div class="flex flex-col gap-y-2 items-center lg:flex-row lg:justify-evenly lg:gap-y-4">
+        <div class="flex gap-x-3 items-center lg:flex-col lg:gap-y-2">
+            <span class="text-yama-accent subtitle">{trans('published', locale) ?? "Publication"}</span>
+            <time datetime={frontmatter.date} class="date">{formatDate(frontmatter.date)}</time>
+        </div>
+        {categories.length > 0 &&
+            <div class="flex gap-x-3 items-center lg:flex-col lg:gap-y-2">
+                <span class="text-yama-accent subtitle">{trans('categories', locale) ?? "Catégories"}</span>
+                <div class="flex gap-x-3">
+                    {categories.map(category => (
+                        <CategoryLink category={category} />
+                    ))}
+                </div>
+            </div>
+        }
+    </div>
+    <Separator />
+    <section class="prose-content">
+        <slot />
+    </section>
+    <Catalog gallery={frontmatter.catalogs?.gallery} />
+    <Navigation
+        previousLabel={trans('navigation.post.next', locale) ?? "Article précédent"}
+        previousUrl={nextPost?.data.permalink}
+        nextLabel={trans('navigation.post.previous', locale) ?? "Article suivant"}
+        nextUrl={previousPost?.data.permalink}
+    />
+    <a href={createPermalinkFromTaxon(category, locale)} class="group flex items-center justify-center w-fit mx-auto mt-4">
+        <div class="w-fit p-1 px-3">
+            <ListIcon styles="size-7 lg:size-8 p-1" />
+        </div>
+        <span class="block max-w-0 whitespace-nowrap overflow-hidden subtitle duration-500 group-hover:max-w-full">
+            {trans('posts.all', locale) ?? "Voir tous les articles"}
+        </span>
+    </a>
+    {similarPosts.length > 0 &&
+        <aside>
+            <span class="block mt-4 subtitle lg:mt-8">{trans('posts.similar', locale) ?? "Articles similaires"}</span>
+            <div class="grid gap-2 lg:gap-8 lg:grid-cols-2">
+                {similarPosts.map((entry, index) => {
+                    if (index < 6) {
+                        return <Article entry={entry} />
+                    }
+                })}
+            </div>
+        </aside>
+    }
+</div>
